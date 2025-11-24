@@ -20,7 +20,8 @@ In short, you can think of Copilot like a very specialized coworker. To be effec
 - **How do I make prompts?:** Being explicit and clear helps Copilot do the best job. But unlike some traditional systems, you can always clarify your direction with followup prompts.
 
 > [!TIP]
-> There several other ways to supplement Copilot's knowledge and capabilities like [chat participants](https://docs.github.com/en/copilot/using-github-copilot/copilot-chat/github-copilot-chat-cheat-sheet?tool=vscode#chat-participants), [chat variables](https://docs.github.com/en/copilot/using-github-copilot/copilot-chat/github-copilot-chat-cheat-sheet?tool=vscode#chat-variables), [slash commands](https://docs.github.com/en/copilot/using-github-copilot/copilot-chat/github-copilot-chat-cheat-sheet?tool=vscode#slash-commands-1), and [MCP tools](https://code.visualstudio.com/docs/copilot/chat/mcp-servers).
+> [!TIP]
+> There are several other ways to supplement Copilot's knowledge and capabilities like [chat participants](https://docs.github.com/en/copilot/using-github-copilot/copilot-chat/github-copilot-chat-cheat-sheet?tool=vscode#chat-participants), [chat variables](https://docs.github.com/en/copilot/using-github-copilot/copilot-chat/github-copilot-chat-cheat-sheet?tool=vscode#chat-variables), [slash commands](https://docs.github.com/en/copilot/using-github-copilot/copilot-chat/github-copilot-chat-cheat-sheet?tool=vscode#slash-commands-1), and [MCP tools](https://code.visualstudio.com/docs/copilot/chat/mcp-servers).
 
 ### :keyboard: Activity: Use Copilot to fix our registration bug :bug:
 
@@ -62,12 +63,16 @@ In short, you can think of Copilot like a very specialized coworker. To be effec
       if activity_name not in activities:
          raise HTTPException(status_code=404, detail="Activity not found")
 
-      # Get the activity
+      # Get the specific activity
       activity = activities[activity_name]
 
       # Validate student is not already signed up
       if email in activity["participants"]:
         raise HTTPException(status_code=400, detail="Student is already signed up")
+
+      # Validate capacity
+      if len(activity["participants"]) >= activity.get("max_participants", float("inf")):
+        raise HTTPException(status_code=400, detail="Activity is full")
 
       # Add student
       activity["participants"].append(email)
