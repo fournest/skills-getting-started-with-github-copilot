@@ -62,12 +62,16 @@ In short, you can think of Copilot like a very specialized coworker. To be effec
       if activity_name not in activities:
          raise HTTPException(status_code=404, detail="Activity not found")
 
-      # Get the activity
+      # Get the specific activity
       activity = activities[activity_name]
 
       # Validate student is not already signed up
       if email in activity["participants"]:
         raise HTTPException(status_code=400, detail="Student is already signed up")
+
+      # Validate capacity
+      if len(activity["participants"]) >= activity.get("max_participants", float("inf")):
+        raise HTTPException(status_code=400, detail="Activity is full")
 
       # Add student
       activity["participants"].append(email)
